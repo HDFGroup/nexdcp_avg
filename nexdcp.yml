@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: nexdcp
+  labels:
+    app: nexdcp
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nexdcp
+  template:
+    metadata:
+      labels:
+        app: nexdcp
+    spec:
+      containers:
+        - name: nexdcp
+          image: 431396205827.dkr.ecr.us-west-2.amazonaws.com/nexdcp:v0.5
+          resources:
+            requests:
+              memory: 512M
+              cpu: 0.5
+          env:
+            - name: HS_ENDPOINT
+              value: http://100.66.25.138
+            - name: HS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: hsds-jreadey-pswd
+                  key: hs_password
+            - name: HS_USERNAME
+              value: jreadey@hdfgroup.org
+            - name: SUMMARY_DOMAIN
+              value: /home/jreadey/nexdcp/summary.h5
